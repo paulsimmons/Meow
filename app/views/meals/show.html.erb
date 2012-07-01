@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <h2><%= @meal.name %> - Hosted By <%= @meal.owner %> on <%= @meal.date %></h2>
+</p>
+
+<p>
+  <b>Instructions:</b>
+  <%= @meal.instructions %>
+</p>
+
+<p>
+  <b>Restaurant:</b>
+  <%= @meal.restaurant %> (<a target="_blank" href="<%= @meal.menuurl %>">Menu</a>)
+</p>
+
+<% if @meal.orders.count > 0 %>
+	<h3>Orders For This Meal</h3>
+	<ol>
+	<% @meal.orders.each do |order| %>
+	<li>
+		<%= link_to 'Delete', [order.meal, order],
+		:confirm => 'Are you sure?',
+		:method => :delete %>
+
+		&nbsp; <%= order.owner %> wants a <%= order.description %>.
+	</li>
+	<% end %>
+	</ol>
+<% end %>
+
+<% if not @meal.date.past? %>
+
+	<h3>Add An Order To This Meal:</h3>
+	<%= form_for([@meal, @meal.orders.build]) do |f| %>
+	  <div class="field">
+	    Order:<br />
+	    <%= f.text_field :description %><br />
+	    Attendee:<br />
+	    <%= f.text_field :owner	 %>
+	  </div>
+	  <div class="actions">
+	    <%= f.submit %>
+	  </div>
+	<% end %>
+
+<%else%>
+	<b>This meal is no longer accepting new orders.</b><p>
+<%end%>
+
+<%= link_to 'Edit Meal', edit_meal_path(@meal) %> |
+<%= link_to 'Delete Meal', @meal, method: :delete, data: { confirm: 'Are you sure?' } %> |
+<%= link_to 'Show All Meals', meals_path %>
