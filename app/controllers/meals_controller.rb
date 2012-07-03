@@ -3,7 +3,8 @@ class MealsController < ApplicationController
 respond_to :html, :json, :xml
 
   def index
-    @meals = Meal.all
+    #@meals = Meal.all
+    @meals = Meal.order("date DESC")
     respond_with @meal
   end
 
@@ -23,35 +24,22 @@ respond_to :html, :json, :xml
 
   def create
     @meal = Meal.new(params[:meal])
-
-    respond_to do |format|
-      if @meal.save
-        format.html { redirect_to @meal, notice: 'Meal was successfully created.' }
-        format.json { render json: @meal, status: :created, location: @meal }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @meal.errors, status: :unprocessable_entity }
-      end
+    if @meal.save
+      flash[:notice] = 'Meal was successfully created.'
     end
+    respond_with @meal
   end
 
   def update
     @meal = Meal.find(params[:id])
-
-    respond_to do |format|
-      if @meal.update_attributes(params[:meal])
-        format.html { redirect_to @meal, notice: 'Meal was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @meal.errors, status: :unprocessable_entity }
-      end
+    if @meal.update_attributes(params[:meal])
+      flash[:notice] = 'Meal was successfully updated.'
     end
+    respond_with @meal
   end
 
   def destroy
     @meal = Meal.find(params[:id])
-    @meal.destroy
     respond_with @meal
   end
 
