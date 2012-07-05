@@ -3,7 +3,6 @@ class MealsController < ApplicationController
 respond_to :html, :json, :xml
 
   def index
-    #@meals = Meal.all
     @meals = Meal.order("date DESC")
     respond_with @meal
   end
@@ -40,6 +39,7 @@ respond_to :html, :json, :xml
 
   def destroy
     @meal = Meal.find(params[:id])
+    @meal.destroy
     respond_with @meal
   end
 
